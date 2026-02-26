@@ -75,3 +75,6 @@ hs_err_pid*
 **/*.iml
 **/.idea
 out/
+
+# Mise en place
+mise.toml
