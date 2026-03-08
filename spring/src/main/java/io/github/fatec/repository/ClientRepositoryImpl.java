@@ -4,6 +4,9 @@ import io.github.fatec.entity.Client;
 import io.github.fatec.repository.adapter.ClientRepositoryAdapter;
 import io.github.fatec.repository.mongo.ClientRepositoryWithMongoDB;
 import io.github.fatec.repository.orm.ClientOrmMongo;
+
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -48,5 +51,13 @@ public class ClientRepositoryImpl implements ClientRepository {
         ClientOrmMongo saved = repository.save(updated);
 
         return ClientRepositoryAdapter.castOrm(saved);
+    }
+
+    @Override
+    public List<Client> findAll() {
+        List<ClientOrmMongo> ormList = repository.findAll();
+        return ormList.stream()
+                .map(ClientRepositoryAdapter::castOrm)
+                .toList();
     }
 }

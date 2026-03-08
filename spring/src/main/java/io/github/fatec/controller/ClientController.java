@@ -5,7 +5,7 @@ import io.github.fatec.controller.dto.request.ClientRequest;
 import io.github.fatec.controller.dto.response.ClientResponse;
 import io.github.fatec.entity.Client;
 import io.github.fatec.repository.ClientRepository;
-
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/clients")
 public class ClientController {
 
     public final ClientRepository clientRepository;
@@ -30,7 +32,16 @@ public class ClientController {
         return ResponseEntity.ok(ClientControllerAdapter.castResponse(client));
     }
 
-    @PostMapping("/client/register")
+    @GetMapping
+    public ResponseEntity<List<ClientResponse>> getAllClients() {
+        List<Client> clients = clientRepository.findAll();
+        List<ClientResponse> response = clients.stream()
+                .map(ClientControllerAdapter::castResponse)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
     public ResponseEntity<ClientResponse> save(@RequestBody ClientRequest request) {
         Client client = ClientControllerAdapter.castRequest(request);
         Client clientSalvo = clientRepository.save(client);
